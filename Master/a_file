@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+
+
+int main(int argc, char** argv)
+{
+	FILE *image_file = fopen(argv[1], "r"); 
+	FILE *crc = fopen(argv[2], "r"); 
+
+	fseek(image_file, 0L, SEEK_END); 
+	int size_i = ftell(image_file); 
+	fseek(image_file, 0L, SEEK_SET); 
+	
+	fseek(crc, 0L, SEEK_END); 
+	int size_c = ftell(crc); 
+	fseek(crc, 0L, SEEK_SET); 
+
+	char *i = malloc(sizeof(*i)*size_i); 
+	char *c = malloc(sizeof(*c)*size_c); 
+
+	FILE *fp= fopen("image_and_crc", "w"); 
+	
+	fread(i, sizeof(char), size_i,image_file); 
+	fread(c, sizeof(char), size_c,crc); 
+	
+	fwrite(i, sizeof(char), size_i, fp); 
+	fwrite(c, sizeof(char), size_c, fp); 
+
+	fclose(image_file); 
+	fclose(crc); 
+	fclose(fp); 
+
+	free(i); 
+	free(c); 
+
+	return EXIT_SUCCESS;  
+	
+
+}
